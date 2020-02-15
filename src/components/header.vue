@@ -3,11 +3,11 @@
   <div class="container-fluid" >
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header" >
-     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+     <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button>
+      </button> -->
       <router-link  to="/"><a class="navbar-brand">The Stock Trader</a></router-link>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
@@ -66,7 +66,6 @@ export default {
         nFunds: null,
         isDropdownOpen: false,
         modal: false,
-
     }
   },
   computed: {
