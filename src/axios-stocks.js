@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const instance = axios.create({
+const stockAxios = axios.create({
     baseURL: 'https://api.worldtradingdata.com/api/v1/stock'
 })
 //instance.defaults.headers.common['SOMETHING'] = 'something'
@@ -15,4 +15,4 @@ return config;
 // Do something with request error
 return Promise.reject(error);
 });
-export default instance
+export default stockAxios

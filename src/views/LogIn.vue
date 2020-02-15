@@ -4,20 +4,20 @@
     <div class="form" >
       <!-- REGISTER -->
         <form class="register-form" v-show="display" autocomplete="on">
-        <input v-model="registration.username" type="text" placeholder="Username" required/>
-        <input v-model="registration.firstName" type="text" placeholder="First Name" required/>
-        <input v-model="registration.lastName" type="text" placeholder="Last Name" required/>
-        <input v-model="registration.age" type="number" placeholder="Age" min="0" max="99">
+        <input autocomplete="username" v-model="registration.username" type="text" placeholder="Username" required/>
+        <input autocomplete="firstname" v-model="registration.firstName" type="text" placeholder="First Name" required/>
+        <input autocomplete="lastname" v-model="registration.lastName" type="text" placeholder="Last Name" required/>
+        <input autocomplete="age" v-model="registration.age" type="number" placeholder="Age" min="0" max="99">
 
-        <input :class="{invalid: $v.registration.password.$error}" 
+        <input autocomplete="new-password" :class="{invalid: $v.registration.password.$error}" 
         v-model="registration.password" type="password" placeholder="Password" 
         @input="$v.registration.password.$touch()"/>
 
-        <input :class="{invalid: $v.registration.password2.$error}" 
+        <input autocomplete="new-password" :class="{invalid: $v.registration.password2.$error}" 
         v-model="registration.password2" type="password" placeholder="Confirm Password" 
         @input="$v.registration.password2.$touch()"/>
 
-        <input :class="{invalid: $v.registration.email.$error}" 
+        <input autocomplete="email" :class="{invalid: $v.registration.email.$error}" 
         v-model="registration.email" type="text" placeholder="Email"  
         @input="$v.registration.email.$touch()"/>
         <p v-if="$v.registration.email.$error">Please provide a valid email address!</p>
@@ -31,9 +31,9 @@
         </form>
         <!-- LOGIN -->
         <form class="login-form" v-show="!display" autocomplete="on">
-        <input :class="{invalid: $v.login.email.$error}" v-model="login.email" type="email" placeholder="email"  @input="$v.login.email.$touch()"/>
+        <input autocomplete="email" :class="{invalid: $v.login.email.$error}" v-model="login.email" type="email" placeholder="email"  @input="$v.login.email.$touch()"/>
         <p v-if="$v.login.email.$error">Please provide a valid email address!</p>
-        <input  v-model="login.password" type="password" placeholder="password" />
+        <input  autocomplete="current-password" v-model="login.password" type="password" placeholder="password" />
         <button @click.prevent="logIn">login</button>
         <p class="message">Not registered?<a @click.prevent="display = !display"> Create an account</a></p>
         </form>

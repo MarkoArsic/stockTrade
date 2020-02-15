@@ -2,13 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-// import authAxios from './axios-auth'
-// import stockAxios from './axios-stocks'
-import testAxios from './allAxios'
-//import router from './router'
-
-import stocks from '@/data/stocks'
-
+import authAxios from './axios-auth'
+import stockAxios from './axios-stocks'
+// import testAxios from './allAxios'
+// import router from './router'
 axios.defaults.baseURL = `https://vue-stock-trader-a06ef.firebaseio.com/`
 
 Vue.use(VueAxios, axios)
@@ -24,15 +21,13 @@ export default new Vuex.Store({
     userId: null,
     user: null
   },
+
+//MUTATIONS
+
   mutations: {
     'SET_STOCKS' (state, data) {
       state.stocks = data; 
     },
-    // 'RAND_STOCKS' (state) {
-    //     state.stocks.forEach(stock => {
-    //       stock.price = Math.round(stock.price * ( 1+ Math.random() -0.5));
-    //     });
-    // },
     'BUY_STOCK' (state, {stockSymbol, stockPrice, stockQuantity}) {
       // check if bought stock is already in my stocks
       const record = state.myStocks.find(element => element.symbol == stockSymbol);
@@ -77,6 +72,9 @@ export default new Vuex.Store({
       state.funds = 0;
     }
   },
+
+// ACTIONS
+
   actions: {
     setLogOutTimer:({commit}, expirationTime) => {
       setTimeout(() => {
@@ -88,21 +86,38 @@ export default new Vuex.Store({
     },
     initStocks: ({commit}) => {
       const apiKey = '8vqefBvic8gH9ZfyG44TvZ5Lm6KhtWUfeUgPuzNiY6vK1TMwXAuIaXnNV4Ji'
-      testAxios.axiosStocks.get('?symbol=BAMXF,GOOG,AAPL,MSFT&api_token=' + apiKey )
+      let data = [];
+      /*Axios 1/3 */
+      stockAxios.get('?symbol=TXN,BAMXF,GOOG,AAPL,MSFT&api_token=' + apiKey )
       .then(res => {
-        const data = res.data.data;
+        data = res.data.data;
+        console.log(data);
+        /*Axios 2/3 */   
+          stockAxios.get('?symbol=INTC,A,C,HOG,HPQ&api_token=' + apiKey )
+            .then(res => {
+              data = data.concat(res.data.data);
+              console.log(data);
+              /*Axios 3/3 */   
+                stockAxios.get('?symbol=KO,LUV,MMM,TGT,WMT&api_token=' + apiKey )
+                .then(res => {
+                  data = data.concat(res.data.data);
+                  console.log(data);
+                  commit('SET_STOCKS', data);
+
+                })
+                .catch(err => {
+                  console.error(err); 
+                }) 
+            })
+            .catch(err => {
+              console.error(err); 
+            }) 
         console.log(data)
-        commit('SET_STOCKS', data);
       })
       .catch(err => {
         console.error(err); 
-      })
-
-       //from data/stocks.js
+      })       
     },
-    // randomizeStocks: ({commit}) => {
-    //   commit('RAND_STOCKS'); //for portfolio view
-    // },
     sellStock: ({commit}, order) => {
       commit('SELL_STOCK', order);
     },
@@ -131,7 +146,7 @@ export default new Vuex.Store({
       })
     },
     register({commit, dispatch}, registration) {
-      testAxios.axiosAuth.post('accounts:signUp?key=AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0', {
+      authAxios.post('accounts:signUp?key=AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0', {
         email: registration.email,
         password: registration.password,
         returnSecureToken: true
@@ -155,7 +170,7 @@ export default new Vuex.Store({
       })
     },
     login({commit, dispatch}, login) {
-      testAxios.axiosAuth.post('accounts:signInWithPassword?key=AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0', {
+      authAxios.post('accounts:signInWithPassword?key=AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0', {
         email: login.email,
         password: login.password,
         returnSecureToken: true
@@ -229,6 +244,9 @@ export default new Vuex.Store({
       localStorage.removeItem('userId');
     }
   },
+
+// GETTERS
+
   getters: {
     stocks: (state) => {
       return state.stocks;

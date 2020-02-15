@@ -20,6 +20,7 @@ import navbar from './components/header.vue'
       created(){
         this.$store.dispatch('initStocks');
         this.$store.dispatch('tryAutoLogin');
+        this.$store.dispatch('loadData');
       }
     }
 </script>
@@ -35,7 +36,7 @@ h1{
 .slide-leave-active {
   animation: slide-out 200ms ease-out forwards;
 }
-
+body { padding-bottom: 70px; }
 @keyframes slide-in {
   from {
     transform: translateY(-30px);

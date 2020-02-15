@@ -19,12 +19,8 @@ import alert from '@/mixins/alertMixin.js'
 //import messageAlert from '@/components/messageAlert'
 export default {
   mixins: [funds, alert],
-  // components:{
-  //   'message-alert': messageAlert
-  // },
   data() {
     return {
-      // showAlert: false
       poruka: 'Hello! I am an custom alert box!! Same as APEX have :-D',
       btnText: 'Close'
     }
