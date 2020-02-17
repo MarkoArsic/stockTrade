@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const stockAxios = axios.create({
-    baseURL: 'https://api.worldtradingdata.com/api/v1/stock'
+    //cryptocurrency
+    baseURL: 'https://api.nomics.com/v1'
 })
 //instance.defaults.headers.common['SOMETHING'] = 'something'
 //instance.defaults.headers.post['Content-Type'] = 'application/json';

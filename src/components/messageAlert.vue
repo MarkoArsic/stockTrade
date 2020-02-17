@@ -98,20 +98,20 @@ p {
 		text-decoration: none;
 		text-shadow: 1px 1px 0 rgba(0,0,0,.5);
 		box-shadow: inset 0 1px 0 0 rgba(255,255,255,.5);
-		background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-		background-image:    -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-		background-image:     -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-		background-image:      -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-		background-image:         linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+		background-image: -webkit-linear-gradient(to left, rgba(255,255,255,.3), rgba(255,255,255,0));
+		background-image:    -moz-linear-gradient(to left, rgba(255,255,255,.3), rgba(255,255,255,0));
+		background-image:     -ms-linear-gradient(to left, rgba(255,255,255,.3), rgba(255,255,255,0));
+		background-image:      -o-linear-gradient(to left, rgba(255,255,255,.3), rgba(255,255,255,0));
+		background-image:         linear-gradient(to left, rgba(255,255,255,.3), rgba(255,255,255,0));
 	}
     .alertify-button:hover,
 	.alertify-button:focus {
 		outline: none;
-		background-image: -webkit-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-		background-image:    -moz-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-		background-image:     -ms-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-		background-image:      -o-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-		background-image:         linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+		background-image: -webkit-linear-gradient(to left, rgba(0,0,0,.1), rgba(0,0,0,0));
+		background-image:    -moz-linear-gradient(to left, rgba(0,0,0,.1), rgba(0,0,0,0));
+		background-image:     -ms-linear-gradient(to left, rgba(0,0,0,.1), rgba(0,0,0,0));
+		background-image:      -o-linear-gradient(to left, rgba(0,0,0,.1), rgba(0,0,0,0));
+		background-image:         linear-gradient(to left, rgba(0,0,0,.1), rgba(0,0,0,0));
 	}
 	.alertify-button:focus {
 		box-shadow: 0 0 15px #2B72D5;

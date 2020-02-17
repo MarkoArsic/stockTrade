@@ -1,5 +1,6 @@
 <template>
-  <div>
+<div>
+<div class="page-header"> 
     <!-- <message-alert v-show="showAlert"></message-alert> -->
     <msg-alert v-show="alert" @alertClose="triggerAlert" :message="poruka" :btnText="btnText"></msg-alert>
     <button @click="triggerAlert">alert</button>
@@ -11,14 +12,23 @@
     <p>Your funds: {{funds | currency}}</p>
     <p v-if="email">Your email: {{email}}</p>
   </div>
+      <stock-table></stock-table>
+
+</div>
+  
 </template>
 
 <script>
 import { funds } from '@/mixins/fundsDisplay.js'
 import alert from '@/mixins/alertMixin.js'
+import stockTable from '@/components/stocks/tableStocks.vue';
+
 //import messageAlert from '@/components/messageAlert'
 export default {
   mixins: [funds, alert],
+  components:{
+    'stock-table':stockTable
+  },
   data() {
     return {
       poruka: 'Hello! I am an custom alert box!! Same as APEX have :-D',

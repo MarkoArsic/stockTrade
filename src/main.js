@@ -4,9 +4,8 @@ import router from './router'
 import store from './store'
 import Vue2Filters from 'vue2-filters'
 import axios from 'axios'
-import VueAxios from 'vue-axios'
+// import VueAxios from 'vue-axios'
 import Vuelidate from 'vuelidate'
-
 
 // axios defaults
 axios.defaults.baseURL = `https://vue-stock-trader-a06ef.firebaseio.com`
@@ -32,9 +31,7 @@ axios.defaults.baseURL = `https://vue-stock-trader-a06ef.firebaseio.com`
 // return Promise.reject(error);
 // });
 
-Vue.use(Vue2Filters)
-Vue.use(VueAxios, axios)
-Vue.use(Vuelidate)
+
 
 Vue.config.productionTip = false
 
@@ -50,10 +47,41 @@ Vue.directive('clickOutside', {
         document.body.removeEventListener('click', el.clickOutsideEvent)
     }
 })
+var Vue2FiltersConfig = {
+  capitalize: {
+    onlyFirstLetter: false
+  },
+  number: {
+    format: '0',
+    thousandsSeparator: ',',
+    decimalSeparator: '.'
+  },
+  bytes: {
+    decimalDigits: 2
+  },
+  currency: {
+    symbol: '€',
+    decimalDigits: 2,
+    thousandsSeparator: ',',
+    decimalSeparator: '.',
+    symbolOnLeft: true,
+    spaceBetweenAmountAndSymbol: true,
+    showPlusSign: false
+  },
+  pluralize: {
+    includeNumber: false
+  },
+  ordinal: {
+    includeNumber: false
+  }
+}
+Vue.use(Vue2Filters,Vue2FiltersConfig)
+Vue.use(axios)
+Vue.use(Vuelidate)
 
-Vue.filter('customCurrency', (value) => {
-  return value.toLocaleString() + '.00' + ' €';  
-})
+// Vue.filter('customCurrency', (value) => {
+//   return value.toLocaleString() + '.00' + ' €';  
+// })
 
 new Vue({
   router,

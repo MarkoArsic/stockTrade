@@ -1,71 +1,71 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import VueAxios from 'vue-axios'
 import authAxios from './axios-auth'
 import stockAxios from './axios-stocks'
 // import testAxios from './allAxios'
 // import router from './router'
 axios.defaults.baseURL = `https://vue-stock-trader-a06ef.firebaseio.com/`
 
-Vue.use(VueAxios, axios)
+Vue.use(axios)
 Vue.use(Vuex)
 
 
 export default new Vuex.Store({
   state: {
-    stocks:[],
-    myStocks:[],
+    stocks: [],
+    myStocks: [],
     funds: 0,
     idToken: null,
     userId: null,
     user: null
   },
 
-//MUTATIONS
+  //MUTATIONS
 
   mutations: {
-    'SET_STOCKS' (state, data) {
-      state.stocks = data; 
+    'SET_STOCKS'(state, data) {
+      state.stocks = data;
     },
-    'BUY_STOCK' (state, {stockSymbol, stockPrice, stockQuantity}) {
+    'BUY_STOCK'(state, { stockSymbol, stockPrice, stockQuantity}) {
       // check if bought stock is already in my stocks
       const record = state.myStocks.find(element => element.symbol == stockSymbol);
-      if (record){
+      if (record) {
         record.quantity += stockQuantity;
       } else {
         state.myStocks.push({
           symbol: stockSymbol,
-          quantity: stockQuantity       
+          quantity: stockQuantity,
+          priceBought: stockPrice
         });
       }
       state.funds -= stockPrice * stockQuantity;
     },
-    'SELL_STOCK' (state, {stockSymbol, stockPrice, stockQuantity}) {
+    'SELL_STOCK'(state, { stockSymbol, stockPrice, stockQuantity }) {
       const record = state.myStocks.find(element => element.symbol == stockSymbol);
-      if(record.quantity > stockQuantity){
+      if (record.quantity > stockQuantity) {
         record.quantity -= stockQuantity;
       } else {
         state.myStocks.splice(state.myStocks.indexOf(record), 1);
       }
       state.funds += stockPrice * stockQuantity;
     },
-    'SET_FUNDS' (state, {funds}) {
+    'SET_FUNDS'(state, { funds }) {
       state.funds = funds;
       console.log(funds);
     },
-    'SET_PORTFOLIO' (state, portfolio) {
+    'SET_PORTFOLIO'(state, portfolio) {
       state.funds = portfolio.funds;
       state.myStocks = portfolio.stockPortfolio ? portfolio.stockPortfolio : [];
     },
-    'AUTH_USER' (state, userData){
+    'AUTH_USER'(state, userData) {
       state.idToken = userData.token;
-      state.userId = userData.userId; 
+      state.userId = userData.userId;
     },
-    'STORE_USER' (state, user){
+    'STORE_USER'(state, user) {
       state.user = user;
     },
-    'LOG_OUT' (state){
+    'LOG_OUT'(state) {
       state.idToken = null;
       state.userId = null;
       state.myStocks = [];
@@ -73,63 +73,40 @@ export default new Vuex.Store({
     }
   },
 
-// ACTIONS
+  // ACTIONS
 
   actions: {
-    setLogOutTimer:({commit}, expirationTime) => {
+    setLogOutTimer: ({ commit }, expirationTime) => {
       setTimeout(() => {
         commit('LOG_OUT')
       }, expirationTime * 1000)
     },
-    buyStock: ({commit}, order) => {
+    buyStock: ({ commit }, order) => {
       commit('BUY_STOCK', order);
     },
-    initStocks: ({commit}) => {
-      const apiKey = '8vqefBvic8gH9ZfyG44TvZ5Lm6KhtWUfeUgPuzNiY6vK1TMwXAuIaXnNV4Ji'
-      let data = [];
-      /*Axios 1/3 */
-      stockAxios.get('?symbol=TXN,BAMXF,GOOG,AAPL,MSFT&api_token=' + apiKey )
-      .then(res => {
-        data = res.data.data;
-        console.log(data);
-        /*Axios 2/3 */   
-          stockAxios.get('?symbol=INTC,A,C,HOG,HPQ&api_token=' + apiKey )
-            .then(res => {
-              data = data.concat(res.data.data);
-              console.log(data);
-              /*Axios 3/3 */   
-                stockAxios.get('?symbol=KO,LUV,MMM,TGT,WMT&api_token=' + apiKey )
-                .then(res => {
-                  data = data.concat(res.data.data);
-                  console.log(data);
-                  commit('SET_STOCKS', data);
-
-                })
-                .catch(err => {
-                  console.error(err); 
-                }) 
-            })
-            .catch(err => {
-              console.error(err); 
-            }) 
-        console.log(data)
-      })
-      .catch(err => {
-        console.error(err); 
-      })       
+    initStocks: ({ commit }) => {
+      const apiKey = '5e36c35158f1ed69115c546ab5c1fcb1';
+        stockAxios.get('/currencies/ticker?key=' + apiKey + '&ids=BTC,ETH,XRP,BCH,BSV,LTC,USDT,EOS,BNB,XTZ,ADA,OKB,LINK,XMR,XLM,NEO,LEO,XEM,BTG,BTT,BCN&interval=1d,30d&convert=EUR')
+          .then(res => {
+            console.log(res.data);
+            commit('SET_STOCKS', res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            
+          })
     },
-    sellStock: ({commit}, order) => {
+    sellStock: ({ commit }, order) => {
       commit('SELL_STOCK', order);
     },
-    setFunds: ({commit}, newfunds) => {
+    setFunds: ({ commit }, newfunds) => {
       commit('SET_FUNDS', newfunds);
     },
-    loadData: ({commit}) => {
+    loadData: ({ commit }) => {
       const token = localStorage.getItem('token')
-      // '/users/' + localStorage.getItem('userId') + '/data.json'
       axios.get('/users/' + localStorage.getItem('userId') + '/data.json' + '?auth=' + token).then((response) => {
         console.log(response.data);
-        if(response.data){
+        if (response.data) {
           console.log('Data Loaded!');
           //const stocks = response.data.stocks;
           const funds = response.data.funds;
@@ -145,62 +122,63 @@ export default new Vuex.Store({
         }
       })
     },
-    register({commit, dispatch}, registration) {
+    register({ commit, dispatch }, registration) {
       authAxios.post('accounts:signUp?key=AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0', {
         email: registration.email,
         password: registration.password,
         returnSecureToken: true
       })
-      .then(response => {
-        console.log(response);
-        commit('AUTH_USER', {
-          token: response.data.idToken,
-          userId: response.data.localId
+        .then(response => {
+          console.log(response);
+          commit('AUTH_USER', {
+            token: response.data.idToken,
+            userId: response.data.localId
+          })
+          const now = new Date();
+          const epirationDate = new Date(now.getTime() + response.data.expiresIn * 1000);
+          localStorage.setItem('token', response.data.idToken);
+          localStorage.setItem('epirationDate', epirationDate);
+          localStorage.setItem('userId', response.data.localId);
+          dispatch('storeUser', registration);
+          dispatch('setLogOutTimer', response.data.expiresIn);
         })
-        const now = new Date();
-        const epirationDate = new Date(now.getTime() + response.data.expiresIn * 1000);
-        localStorage.setItem('token', response.data.idToken);
-        localStorage.setItem('epirationDate', epirationDate);
-        localStorage.setItem('userId', response.data.localId);
-        dispatch('storeUser', registration);
-        dispatch('setLogOutTimer', response.data.expiresIn);
-      })
-      .catch(err => {
-        console.error(err); 
-      })
+        .catch(err => {
+          console.error(err);
+        })
     },
-    login({commit, dispatch}, login) {
-      authAxios.post('accounts:signInWithPassword?key=AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0', {
+    login({ commit, dispatch }, login) {
+      const key = 'AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0';
+      authAxios.post('accounts:signInWithPassword?key=' + key, {
         email: login.email,
         password: login.password,
         returnSecureToken: true
       })
-      .then(response => {
-        console.log(response);
-        commit('AUTH_USER', {
-          token: response.data.idToken,
-          userId: response.data.localId
+        .then(response => {
+          console.log(response);
+          commit('AUTH_USER', {
+            token: response.data.idToken,
+            userId: response.data.localId
+          })
+          const now = new Date();
+          const epirationDate = new Date(now.getTime() + response.data.expiresIn * 1000);
+          localStorage.setItem('token', response.data.idToken);
+          localStorage.setItem('epirationDate', epirationDate);
+          localStorage.setItem('userId', response.data.localId);
+          dispatch('setLogOutTimer', response.data.expiresIn);
+          dispatch('loadData');
         })
-        const now = new Date();
-        const epirationDate = new Date(now.getTime() + response.data.expiresIn * 1000);
-        localStorage.setItem('token', response.data.idToken);
-        localStorage.setItem('epirationDate', epirationDate);
-        localStorage.setItem('userId', response.data.localId);
-        dispatch('setLogOutTimer', response.data.expiresIn);
-        dispatch('loadData');
-      })
-      .catch(err => {
-        console.error(err); 
-      })
+        .catch(err => {
+          console.error(err);
+        })
     },
-    tryAutoLogin({commit}){
+    tryAutoLogin({ commit }) {
       const token = localStorage.getItem('token')
-      if(!token){
+      if (!token) {
         return
       }
       const epirationDate = localStorage.getItem('epirationDate');
       const now = new Date();
-      if(now >= epirationDate){
+      if (now >= epirationDate) {
         return
       }
       const userId = localStorage.getItem('userId');
@@ -209,35 +187,35 @@ export default new Vuex.Store({
         userId: userId
       });
     },
-    storeUser({commit, state}, registration) {
-      if(!state.idToken){
+    storeUser({ commit, state }, registration) {
+      if (!state.idToken) {
         return
       }
       axios.post('/users/' + localStorage.getItem('userId') + '.json' + '?auth=' + state.idToken, registration)
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.error(err); 
-      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err);
+        })
     },
-    fetchUser({commit, state}) {
-      if(!state.idToken){
+    fetchUser({ commit, state }) {
+      if (!state.idToken) {
         return
       }
       axios.get('/users/' + localStorage.getItem('userId') + '.json' + '?auth=' + state.idToken)
-      .then(res => {
-        console.log(`Fetched users: + ${res.data}`);
-        const users = [];
-        for(let key in res.data){
-          const user = res.data[key];
-          user.id = localStorage.getItem('userId');
-          users.push(user);
-        }
-        commit('STORE_USER', users[0]);
-      })
+        .then(res => {
+          console.log(`Fetched users: + ${res.data}`);
+          const users = [];
+          for (let key in res.data) {
+            const user = res.data[key];
+            user.id = localStorage.getItem('userId');
+            users.push(user);
+          }
+          commit('STORE_USER', users[0]);
+        })
     },
-    logOut({commit}) { 
+    logOut({ commit }) {
       commit('LOG_OUT');
       localStorage.removeItem('epirationDate');
       localStorage.removeItem('token');
@@ -245,13 +223,13 @@ export default new Vuex.Store({
     }
   },
 
-// GETTERS
+  // GETTERS
 
   getters: {
     stocks: (state) => {
       return state.stocks;
     },
-    stockPortfolio (state, getters) {
+    stockPortfolio(state, getters) {
       //returning new array of myStocks, but with name and current price from global stocks, matched by symbol!
       return state.myStocks.map(stock => {
         const record = getters.stocks.find(element => element.symbol === stock.symbol);
@@ -259,17 +237,21 @@ export default new Vuex.Store({
           symbol: stock.symbol,
           quantity: stock.quantity,
           name: record.name,
-          price: record.price
+          price: record.price,
+          priceBought: stock.priceBought,
+          market_cap: record.market_cap,
+          logo_url: record.logo_url,
+          price_date: record.price_date
         }
       });
     },
-    funds (state) {
+    funds(state) {
       return state.funds;
     },
-    user (state) {
+    user(state) {
       return state.user;
     },
-    isAuthenticated (state) {
+    isAuthenticated(state) {
       return state.idToken !== null;
     }
   }

@@ -17,7 +17,7 @@
         v-model="registration.password2" type="password" placeholder="Confirm Password" 
         @input="$v.registration.password2.$touch()"/>
 
-        <input autocomplete="email" :class="{invalid: $v.registration.email.$error}" 
+        <input autocomplete="new-password" :class="{invalid: $v.registration.email.$error}" 
         v-model="registration.email" type="text" placeholder="Email"  
         @input="$v.registration.email.$touch()"/>
         <p v-if="$v.registration.email.$error">Please provide a valid email address!</p>

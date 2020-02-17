@@ -1,38 +1,48 @@
 <template>
-  <nav class="navbar navbar-inverse navbar-static-top">
+  <nav class="navbar navbar-fixed-top navbar-inverse">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        </button>-->
-        <router-link to="/">
+        <button
+          type="button"
+          class="navbar-toggle collapsed"
+          data-toggle="collapse"
+          data-target="#navbar"
+          aria-expanded="false"
+          aria-controls="navbar"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <router-link to="/home">
           <a class="navbar-brand">The Stock Trader</a>
         </router-link>
       </div>
-      <div class="collapse navbar-collapse" id="myNavbar">
+      <div class="collapse navbar-collapse" id="navbar">
         <ul class="nav navbar-nav">
+          <router-link tag="li" to="/" activeClass="active">
+            <a>Home</a>
+          </router-link>
+
           <router-link tag="li" to="/portfolio" activeClass="active">
-            <a>Portfolio</a>
+            <a>MyTradings</a>
           </router-link>
           <router-link tag="li" to="/stocks" activeClass="active">
             <a>Stocks</a>
           </router-link>
         </ul>
         <form class="navbar-form navbar-left">
-          <div class="input-group">
+          <div class="form-group">
             <input
               type="number"
               class="form-control"
               :placeholder="funds | currency"
               v-model="nFunds"
             />
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button" @click.prevent="setFunds(nFunds)">Apply</button>
-            </span>
           </div>
+          <button v-show="funds <= 100" class="btn btn-default" @click.prevent="setFunds(nFunds)">Apply</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
           <!-- <li @click.prevent="endDay"><a>End Day</a></li> -->
@@ -111,7 +121,7 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch("logOut");
-      this.$router.push("/");
+      this.$router.push("/stocks");
     },
     setFunds(nFunds) {
       const newfunds = {
