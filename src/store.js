@@ -5,9 +5,10 @@ import authAxios from './axios-auth'
 import stockAxios from './axios-stocks'
 // import testAxios from './allAxios'
 // import router from './router'
-axios.defaults.baseURL = `https://vue-stock-trader-a06ef.firebaseio.com/`
+axios.defaults.baseURL = 'https://vue-stock-trader-a06ef.firebaseio.com/'
+axios.defaults.headers["content-type"] = "application/json";
 
-Vue.use(axios)
+// Vue.use(axios)
 Vue.use(Vuex)
 
 

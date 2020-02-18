@@ -3,14 +3,18 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Vue2Filters from 'vue2-filters'
-import axios from 'axios'
-// import VueAxios from 'vue-axios'
+import axios from 'vue-axios'
+// import VueAxios from 'axios'
 import Vuelidate from 'vuelidate'
 
 // axios defaults
-axios.defaults.baseURL = `https://vue-stock-trader-a06ef.firebaseio.com`
+//axios.defaults.baseURL = 'https://vue-stock-trader-a06ef.firebaseio.com'
 // axios.defaults.headers.common['Authorisation'] = 'asdqew' 
 //axios.defaults.headers.get['Accepts'] = 'application/json'
+//axios.defaults.headers.get['Content-Type'] = 'application/json';
+//axios.defaults.headers["content-type"] = "application/json";
+
+
 
 // // axios interceptors
 // axios.interceptors.request.use(config => {
@@ -76,7 +80,7 @@ var Vue2FiltersConfig = {
   }
 }
 Vue.use(Vue2Filters,Vue2FiltersConfig)
-Vue.use(axios)
+//Vue.use(axios)
 Vue.use(Vuelidate)
 
 // Vue.filter('customCurrency', (value) => {

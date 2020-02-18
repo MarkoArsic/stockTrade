@@ -13,14 +13,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
-      beforeEnter (to, from , next) {
-        if (store.state.idToken){
-          next();
-        }else {
-          next('/stocks');
-        }
-      }
+      component: Home
     },
     {
       path: '/stocks',
@@ -30,7 +23,14 @@ export default new Router({
     {
       path: '/portfolio',
       name: 'portfolio',
-      component: Portfolio
+      component: Portfolio,
+      beforeEnter (to, from , next) {
+        if (store.state.idToken){
+          next();
+        }else {
+          next('/');
+        }
+      }
     }
   ]
 })

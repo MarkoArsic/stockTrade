@@ -1,10 +1,5 @@
 <template>
 <div>
-    <!-- <ul v-for="(stock,index) in orderBy(stocks, stocks.rank)" :key="index">
-       <li v-for="i in stock>
-           {{i}}
-       </li> -->
-
        
     </ul>
     
@@ -23,7 +18,7 @@
         
       </thead>
       <tbody>
-        <tr v-for="stock in stocks">
+        <tr v-for="(stock,index) in stocks" :key="index">
           <td>{{stock.rank}}</td>
           <td>
             <div>
@@ -31,6 +26,9 @@
             </div>{{stock.name}}</td>
           <td>{{stock.market_cap}}</td>
           <td>{{stock.price}}</td>
+
+            
+         
           <td></td>
           <td></td>
           <td></td>
@@ -65,6 +63,9 @@ export default {
       };
       this.$store.dispatch("buyStock", order);
       this.quantity = 0;
+    },
+    nervira(i){
+      return this.stocks[i]["1d"].price_change;
     }
   },
   computed: {
