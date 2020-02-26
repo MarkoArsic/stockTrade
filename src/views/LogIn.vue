@@ -42,8 +42,10 @@
 </template>
 <script>
 import { required, email, sameAs, minLength} from 'vuelidate/lib/validators'
+//import { validationMixin } from 'vuelidate'
 
 export default {
+  
     data() {
       return {
         display: false,

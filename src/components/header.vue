@@ -98,7 +98,6 @@
 </template>
 <script>
 import { funds } from "@/mixins/fundsDisplay.js";
-import { mapActions } from "vuex";
 import login from "../views/LogIn.vue";
 
 export default {
@@ -133,22 +132,13 @@ export default {
     toggle() {
       return (this.isDropdownOpen = false);
     },
-    // ...mapActions({
-    //   randomizeStocks: 'randomizeStocks'
-    // }),
     saveData() {
       const data = {
         funds: this.$store.getters.funds,
         stockPortfolio: this.$store.getters.stockPortfolio
       };
-      const userId = localStorage.getItem("userId");
-      const token = localStorage.getItem("token");
-      "/users/" + localStorage.getItem("userId") + "/data.json";
-      this.axios
-        .put("/users/" + userId + "/data.json" + "?auth=" + token, data)
-        .then(response => {
-          console.log("Data saved: " + response.data);
-        });
+      this.$store.dispatch("saveData", data);
+
     },
     getData() {
       this.$store.dispatch("loadData");

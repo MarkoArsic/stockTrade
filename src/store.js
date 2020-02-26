@@ -1,15 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
-import authAxios from './axios-auth'
-import stockAxios from './axios-stocks'
-// import testAxios from './allAxios'
+import {axiosAuth, cryptoAxios, userDataAxios} from '@/allAxios'
 // import router from './router'
-axios.defaults.baseURL = 'https://vue-stock-trader-a06ef.firebaseio.com/'
-axios.defaults.headers["content-type"] = "application/json";
 
-// Vue.use(axios)
-Vue.use(Vuex)
+
+
+Vue.use(Vuex);
+//Vue.use(axios);
 
 
 export default new Vuex.Store({
@@ -87,7 +84,7 @@ export default new Vuex.Store({
     },
     initStocks: ({ commit }) => {
       const apiKey = '5e36c35158f1ed69115c546ab5c1fcb1';
-        stockAxios.get('/currencies/ticker?key=' + apiKey + '&ids=BTC,ETH,XRP,BCH,BSV,LTC,USDT,EOS,BNB,XTZ,ADA,OKB,LINK,XMR,XLM,NEO,LEO,XEM,BTG,BTT,BCN&interval=1d,30d&convert=EUR')
+      cryptoAxios.get('/currencies/ticker?key=' + apiKey + '&ids=BTC,ETH,XRP,BCH,BSV,LTC,USDT,EOS,BNB,XTZ,ADA,OKB,LINK,XMR,XLM,NEO,LEO,XEM,BTG,BTT,BCN&interval=1d,30d&convert=EUR')
           .then(res => {
             console.log(res.data);
             commit('SET_STOCKS', res.data);
@@ -105,7 +102,7 @@ export default new Vuex.Store({
     },
     loadData: ({ commit }) => {
       const token = localStorage.getItem('token')
-      axios.get('/users/' + localStorage.getItem('userId') + '/data.json' + '?auth=' + token).then((response) => {
+      userDataAxios.get('/users/' + localStorage.getItem('userId') + '/data.json' + '?auth=' + token).then((response) => {
         console.log(response.data);
         if (response.data) {
           console.log('Data Loaded!');
@@ -123,8 +120,19 @@ export default new Vuex.Store({
         }
       })
     },
+    // loadData: ({commit}, data) => {
+    //   const userId = localStorage.getItem("userId");
+    //   const token = localStorage.getItem("token");
+    //   "/users/" + localStorage.getItem("userId") + "/data.json";
+    //   this.axios
+    //     .put("/users/" + userId + "/data.json" + "?auth=" + token, data)
+    //     .then(response => {
+    //       console.log("Data saved: " + response.data);
+    //     });
+    // },
     register({ commit, dispatch }, registration) {
-      authAxios.post('accounts:signUp?key=AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0', {
+      const key = 'AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0';
+      axiosAuth.post(`accounts:signUp?key=${key}`, {
         email: registration.email,
         password: registration.password,
         returnSecureToken: true
@@ -149,7 +157,7 @@ export default new Vuex.Store({
     },
     login({ commit, dispatch }, login) {
       const key = 'AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0';
-      authAxios.post('accounts:signInWithPassword?key=' + key, {
+      axiosAuth.post('accounts:signInWithPassword?key=' + key, {
         email: login.email,
         password: login.password,
         returnSecureToken: true
@@ -192,7 +200,7 @@ export default new Vuex.Store({
       if (!state.idToken) {
         return
       }
-      axios.post('/users/' + localStorage.getItem('userId') + '.json' + '?auth=' + state.idToken, registration)
+      userDataAxios.post('/users/' + localStorage.getItem('userId') + '.json' + '?auth=' + state.idToken, registration)
         .then(res => {
           console.log(res)
         })
@@ -204,7 +212,7 @@ export default new Vuex.Store({
       if (!state.idToken) {
         return
       }
-      axios.get('/users/' + localStorage.getItem('userId') + '.json' + '?auth=' + state.idToken)
+      userDataAxios.get('/users/' + localStorage.getItem('userId') + '.json' + '?auth=' + state.idToken)
         .then(res => {
           console.log(`Fetched users: + ${res.data}`);
           const users = [];

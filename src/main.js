@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
+import axios from 'axios'
 import router from './router'
 import store from './store'
 import Vue2Filters from 'vue2-filters'
-import axios from 'vue-axios'
-// import VueAxios from 'axios'
 import Vuelidate from 'vuelidate'
 
+//VueAxios.defaults.headers["content-type"] = "application/json";
 // axios defaults
 //axios.defaults.baseURL = 'https://vue-stock-trader-a06ef.firebaseio.com'
 // axios.defaults.headers.common['Authorisation'] = 'asdqew' 
@@ -35,8 +35,9 @@ import Vuelidate from 'vuelidate'
 // return Promise.reject(error);
 // });
 
-
-
+//Vue.use(axios);
+Vue.use(store);
+Vue.use(Vuelidate);
 Vue.config.productionTip = false
 
 Vue.directive('clickOutside', {
@@ -79,16 +80,15 @@ var Vue2FiltersConfig = {
     includeNumber: false
   }
 }
-Vue.use(Vue2Filters,Vue2FiltersConfig)
-//Vue.use(axios)
-Vue.use(Vuelidate)
-
 // Vue.filter('customCurrency', (value) => {
 //   return value.toLocaleString() + '.00' + ' €';  
 // })
+Vue.use(Vue2Filters);
+Vue.use(Vue2FiltersConfig);
 
 new Vue({
   router,
   store,
+  validations: {},
   render: h => h(App)
 }).$mount('#app')
