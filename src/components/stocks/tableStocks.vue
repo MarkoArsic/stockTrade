@@ -26,14 +26,16 @@
             </div>{{stock.name}}</td>
           <td>{{stock.market_cap}}</td>
           <td>{{stock.price}}</td>
-
-            
+            <div v-for="(d1,i) in stock" :key="i">
+              <td>{{ ["1d"].price_change}}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </div>
+              
          
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>{{stock.circulating_supply}}</td>
+        
+          <!-- <td>{{stock.circulating_supply}}</td> -->
         </tr>
 
       </tbody>

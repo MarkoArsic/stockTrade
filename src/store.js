@@ -105,11 +105,8 @@ export default new Vuex.Store({
       userDataAxios.get('/users/' + localStorage.getItem('userId') + '/data.json' + '?auth=' + token).then((response) => {
         console.log(response.data);
         if (response.data) {
-          console.log('Data Loaded!');
-          //const stocks = response.data.stocks;
           const funds = response.data.funds;
           const stockPortfolio = response.data.stockPortfolio;
-
           const portfolio = {
             stockPortfolio,
             funds
@@ -120,16 +117,16 @@ export default new Vuex.Store({
         }
       })
     },
-    // loadData: ({commit}, data) => {
-    //   const userId = localStorage.getItem("userId");
-    //   const token = localStorage.getItem("token");
-    //   "/users/" + localStorage.getItem("userId") + "/data.json";
-    //   this.axios
-    //     .put("/users/" + userId + "/data.json" + "?auth=" + token, data)
-    //     .then(response => {
-    //       console.log("Data saved: " + response.data);
-    //     });
-    // },
+    saveData:({commit}, data) => {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+      "/users/" + localStorage.getItem("userId") + "/data.json";
+      userDataAxios
+        .put(`/users/${userId}/data.json?auth=${token}`, data)
+        .then(response => {
+          console.log("Data saved: " + response.data);
+        });
+    },
     register({ commit, dispatch }, registration) {
       const key = 'AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0';
       axiosAuth.post(`accounts:signUp?key=${key}`, {
@@ -157,7 +154,7 @@ export default new Vuex.Store({
     },
     login({ commit, dispatch }, login) {
       const key = 'AIzaSyCgjanCmfZAqy-w8QSlvZkvlU64f_4JZG0';
-      axiosAuth.post('accounts:signInWithPassword?key=' + key, {
+      axiosAuth.post(`accounts:signInWithPassword?key=${key}`, {
         email: login.email,
         password: login.password,
         returnSecureToken: true
