@@ -16,7 +16,8 @@ export default new Vuex.Store({
     funds: 0,
     idToken: null,
     userId: null,
-    user: null
+    user: null,
+    loading: false
   },
 
   //MUTATIONS
@@ -24,6 +25,7 @@ export default new Vuex.Store({
   mutations: {
     'SET_STOCKS'(state, data) {
       state.stocks = data;
+      state.loading = false;
     },
     'BUY_STOCK'(state, { stockSymbol, stockPrice, stockQuantity}) {
       // check if bought stock is already in my stocks
@@ -68,6 +70,9 @@ export default new Vuex.Store({
       state.userId = null;
       state.myStocks = [];
       state.funds = 0;
+    },
+    'LOADING'(state, value) {
+      state.loading = value;
     }
   },
 
@@ -86,6 +91,7 @@ export default new Vuex.Store({
       const apiKey = '5e36c35158f1ed69115c546ab5c1fcb1';
       cryptoAxios.get('/currencies/ticker?key=' + apiKey + '&ids=BTC,ETH,XRP,BCH,BSV,LTC,USDT,EOS,BNB,XTZ,ADA,OKB,LINK,XMR,XLM,NEO,LEO,XEM,BTG,BTT,BCN&interval=1d,30d&convert=EUR')
           .then(res => {
+            commit('LOADING', true);
             console.log(res.data);
             commit('SET_STOCKS', res.data);
           })
@@ -93,6 +99,7 @@ export default new Vuex.Store({
             console.error(err);
             
           })
+
     },
     sellStock: ({ commit }, order) => {
       commit('SELL_STOCK', order);
@@ -232,6 +239,9 @@ export default new Vuex.Store({
   // GETTERS
 
   getters: {
+    isLoading: (state) => {
+      return state.loading;
+    },
     stocks: (state) => {
       return state.stocks;
     },
